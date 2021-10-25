@@ -1,0 +1,91 @@
+---
+title: "work shop 7- assignment test 3"
+author: "Mariam s4664140"
+date: "25/10/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(lubridate)
+library(skimr)
+```
+
+### Data set exploration and identifying a business problem(= main question to solve)
+```{r}
+coffee_ratings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
+
+```
+**questions**:how can i predict of rating of coffee?(=which means what factors affects its rating= quality )
+**sub question **:
+does altitude affect quality?
+does the place of origin affect its rating(country,owner, farm)
+are all robusta beans rated low?
+what are most acidic coffee beans ?
+lets look at data 
+```{r}
+skim(coffee_ratings)
+```
+lets look at the rating boxplot
+
+```{r}
+coffee_ratings%>%ggplot(
+  aes(total_cup_points)
+)+
+  geom_boxplot()
+
+coffee_rating_clean<-coffee_ratings%>%filter(total_cup_points>69)
+```
+doing another varible with the box plot 
+
+```{r}
+coffee_ratings%>%ggplot(aes(aroma)
+                        )+
+  geom_boxplot()
+```
+
+lest explore factors !
+```{r}
+coffee_ratings%>%count(species,sort=TRUE)
+coffee_ratings%>%count(variety,sort = TRUE)
+```
+'variety' should be factor!
+
+get rid of NA
+```{r}
+coffee_rating_clean<-coffee_ratings%>%
+  mutate(variety=as_factor(variety))%>%
+  filter(!is.na(variety))
+coffee_rating_clean<-coffee_rating_clean%>%
+  mutate(
+    variety=fct_lump_n(coffee_rating_clean$variety, n=4)
+    )
+
+coffee_rating_clean%>%
+  count(variety, sort=TRUE)
+
+```
+
+can i lump up variety categories with low number of observations
+
+
+lets explore relation between altitude mean meter and total cup of points 
+
+```{r}
+coffee_rating_clean%>%ggplot(
+  aes(x=flavor,y=total_cup_points)
+)+
+  geom_point()
+
+
+coffee_rating_clean%>%ggplot(
+  aes(x=moisture,y=total_cup_points)
+)+
+  
+  geom_smooth(method = lm)
+
+```
+
+
