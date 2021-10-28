@@ -37,14 +37,13 @@ coffee_ratings%>%ggplot(
   geom_boxplot()
 
 coffee_rating_clean<-coffee_ratings%>%filter(total_cup_points>69)
-```
-doing another varible with the box plot 
-
-```{r}
 coffee_ratings%>%ggplot(aes(aroma)
                         )+
   geom_boxplot()
 ```
+doing another varible with the box plot 
+
+
 
 lest explore factors !
 ```{r}
@@ -53,7 +52,7 @@ coffee_ratings%>%count(variety,sort = TRUE)
 ```
 'variety' should be factor!
 
-get rid of NA
+get rid of NA (removing using filters)
 ```{r}
 coffee_rating_clean<-coffee_ratings%>%
   mutate(variety=as_factor(variety))%>%
@@ -75,17 +74,25 @@ lets explore relation between altitude mean meter and total cup of points
 
 ```{r}
 coffee_rating_clean%>%ggplot(
-  aes(x=flavor,y=total_cup_points)
+  aes(x=altitude_mean_meters,y=total_cup_points)
 )+
   geom_point()
 
 
 coffee_rating_clean%>%ggplot(
-  aes(x=moisture,y=total_cup_points)
+  aes(x=altitude_mean_meters,y=total_cup_points)
 )+
   
   geom_smooth(method = lm)
 
 ```
+linar model(predicting total cup points based on altitude mean meters and save it to the variable res)
+```{r}
+library(tidyverse)
+library(broom)
+res<-lm(total_cup_points~altitude_mean_meters+number_of_bags+acidity, data=coffee_rating_clean)
 
+summary(res)
+
+```
 
