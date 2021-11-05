@@ -93,6 +93,5 @@ library(broom)
 res<-lm(total_cup_points~altitude_mean_meters+number_of_bags+acidity, data=coffee_rating_clean)
 
 summary(res)
-
 ```
-
+ASSIGNMENT 
